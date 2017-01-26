@@ -1,19 +1,19 @@
 version: "2"
 services:
-  dvwa:
-    build: dvwa
-    image: dvwa:private
-    networks:
-      - secure
-      - suricata
-#      secure:
-#        ipv4_address: 172.16.3.3
-#      suricata:
-#        ipv4_address: 172.16.2.3
-    ports:
-      - 80:80
-      - 3306:3306
-    privileged: true
+#  dvwa:
+#    build: dvwa
+#    image: dvwa:private
+#    networks:
+#      - secure
+#      - suricata
+##      secure:
+##        ipv4_address: 172.16.3.3
+##      suricata:
+##        ipv4_address: 172.16.2.3
+#    ports:
+#      - 80:80
+#      - 3306:3306
+#    privileged: true
 
   elasticsearch:
     image: elasticsearch
@@ -21,8 +21,7 @@ services:
       - suricata
 
   kibana:
-    build: kibana
-    image: kibana:private
+    image: vax3/Kibana-SELK
     environment:
       - ELASTICSEARCH_URL=http://elasticsearch:9200
     networks:
@@ -31,8 +30,7 @@ services:
       - 5601:5601
 
   kibana_dashboard:
-    build: kibana
-    image: kibana:private
+    image: vax3/Kibana-SELK
     environment:
       - ELASTICSEARCH_URL=http://elasticsearch:9200
     networks:
@@ -43,14 +41,13 @@ services:
       - elasticsearch
 
   logstash:
-    build: logstash
-    image: logstash:private
+    build: Logstash-SELK
+    image: Logstash-SELK
     networks:
       - suricata
 
   suricata:
-    build: suricata
-    image: suricata:private
+    image: vax3/Suricata-SELK
     environment:
       - FILEBEAT_TAG=logstash
       - HOME_NETWORK=172.16.3.0/24

@@ -1,0 +1,12 @@
+[submodule "suricata-SELK"]
+	path = suricata-SELK
+	url = https://github.com/Vax3/suricata-SELK
+[submodule "Kibana-SELK"]
+	path = Kibana-SELK
+	url = https://github.com/Vax3/Kibana-SELK
+[submodule "Logstash-SELK"]
+	path = Logstash-SELK
+	url = https://github.com/Vax3/Logstash-SELK
+[submodule "Suricata-SELK"]
+	path = Suricata-SELK
+	url = https://github.com/Vax3/Suricata-SELK
