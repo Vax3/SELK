@@ -1,0 +1,81 @@
+version: "2"
+services:
+  dvwa:
+    build: dvwa
+    image: dvwa:private
+    networks:
+      - secure
+      - suricata
+#      secure:
+#        ipv4_address: 172.16.3.3
+#      suricata:
+#        ipv4_address: 172.16.2.3
+    ports:
+      - 80:80
+      - 3306:3306
+    privileged: true
+
+  elasticsearch:
+    image: elasticsearch
+    networks:
+      - suricata
+
+  kibana:
+    build: kibana
+    image: kibana:private
+    environment:
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+    networks:
+      - suricata
+    ports:
+      - 5601:5601
+
+  kibana_dashboard:
+    build: kibana
+    image: kibana:private
+    environment:
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+    networks:
+      - suricata
+    entrypoint:
+      - /entrypoint.sh
+    depends_on:
+      - elasticsearch
+
+  logstash:
+    build: logstash
+    image: logstash:private
+    networks:
+      - suricata
+
+  suricata:
+    build: suricata
+    image: suricata:private
+    environment:
+      - FILEBEAT_TAG=logstash
+      - HOME_NETWORK=172.16.3.0/24
+      - LOGSTASH_HOST=logstash
+      - LOGSTASH_PORT=5044
+      - PATH_LOGS=/var/log/suricata/eve.json
+    networks:
+      secure:
+        ipv4_address: 172.16.3.2
+      suricata:
+        ipv4_address: 172.16.2.2
+    privileged: true
+
+networks:
+  secure:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+      - subnet: 172.16.3.0/24
+        gateway: 172.16.3.1
+  suricata:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+      - subnet: 172.16.2.0/24
+        gateway: 172.16.2.1
