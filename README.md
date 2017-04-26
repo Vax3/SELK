@@ -8,7 +8,7 @@ If you want to test the complet stack (with the DVWA container) please follow th
 - on your host add the following route 
     - ip route add <CIDR_DVWA_NETWORK> via <IP_SURICATA_CONTAINER>
 - remove the docker route to the DVWA network
-    - ip route del <>
+    - ip route del <CIDR_NETWORK_DOCKER_TO_DVWA_NETWORK>
 on the DVWA container add the following route
     - ip route add <CIDR_HOST_NETWORK> via <IP_SURICATA_CONTAINER>
 
