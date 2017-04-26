@@ -2,14 +2,10 @@ version: "2"
 services:
 #  dvwa:
 #    build: dvwa
-#    image: dvwa:private
+#    image: dvwa
 #    networks:
 #      - secure
 #      - suricata
-##      secure:
-##        ipv4_address: 172.16.3.3
-##      suricata:
-##        ipv4_address: 172.16.2.3
 #    ports:
 #      - 80:80
 #      - 3306:3306
@@ -54,10 +50,8 @@ services:
       - LOGSTASH_PORT=5044
       - PATH_LOGS=/var/log/suricata/eve.json
     networks:
-      secure:
-        ipv4_address: 172.16.3.2
-      suricata:
-        ipv4_address: 172.16.2.2
+      - secure
+      - suricata
     privileged: true
 
 networks:
