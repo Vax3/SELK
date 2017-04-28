@@ -1,15 +1,15 @@
 version: "2"
 services:
-#  dvwa:
-#    build: dvwa
-#    image: dvwa
-#    networks:
-#      - secure
-#      - suricata
-#    ports:
-#      - 80:80
-#      - 3306:3306
-#    privileged: true
+  dvwa:
+    build: dvwa
+    image: dvwa
+    networks:
+      - secure
+      - suricata
+    ports:
+      - 80:80
+      - 3306:3306
+    privileged: true
 
   elasticsearch:
     image: elasticsearch

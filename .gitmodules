@@ -10,3 +10,6 @@
 [submodule "Suricata-SELK"]
 	path = Suricata-SELK
 	url = https://github.com/Vax3/Suricata-SELK
+[submodule "DVWA-SELK"]
+	path = DVWA-SELK
+	url = https://github.com/Vax3/DVWA-SELK
