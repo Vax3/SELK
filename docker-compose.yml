@@ -16,7 +16,7 @@ services:
       - suricata
 
   kibana:
-    image: vax3/kibana-selk
+    image: docker.elastic.co/kibana/kibana:5.3.2
     environment:
       - ELASTICSEARCH_URL=http://elasticsearch:9200
     networks:
@@ -25,7 +25,7 @@ services:
       - 5601:5601
 
   kibana_dashboard:
-    image: vax3/kibana-selk
+    image: kibana
     environment:
       - ELASTICSEARCH_URL=http://elasticsearch:9200
     networks:
