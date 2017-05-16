@@ -6,16 +6,19 @@ Make sure that, when cloning the project, you use `git clone --recurse-submodule
 If you want to test the complet stack (with the DVWA container) please follow the instructions:
 - uncomment the DVWA service
 - on your host:
-    - remove the docker route to the DVWA network
-        - ip route del <CIDR_NETWORK_DOCKER_TO_DVWA_NETWORK>
+    - remove the docker route to the dvwa network
+        - ip route del 172.16.3.0/24
     - add the following route
-        - ip route add <CIDR_DVWA_NETWORK> via <IP_SURICATA_CONTAINER>
+        - ip route add 172.16.3.0/24 via <IP_SURICATA_CONTAINER>
 
 - on the DVWA container:
-    - remove the docker route to your host network
-        - ip route del <CIDR_NETWORK_DOCKER_TO_HOST_NETWORK>
+    - remove the default route
+        - ip route del default
     - add the following route
-        - ip route add <CIDR_HOST_NETWORK> via <IP_SURICATA_CONTAINER>
+        - ip route add default via <IP_SURICATA_CONTAINER>
+    - remove the docker others route
+        - ip route del 172.16.2.0/24
+        - ip route del 172.16.3.0/24
 
 
 The project contains all the [SELKS project](https://www.stamus-networks.com/) dashboard.
