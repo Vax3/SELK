@@ -32,7 +32,7 @@ services:
     networks:
       - suricata
     volumes:
-      - ~/project/docker/selk/Logstash-SELK/logstash.conf:/etc/logstash/conf.d/logstash.conf
+      - ~/project/docker/SELK/Logstash-SELK/logstash.conf:/etc/logstash/conf.d/logstash.conf
 
   suricata:
     image: suricata
