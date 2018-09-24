@@ -10,12 +10,12 @@ services:
     privileged: true
 
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:6.3.0
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.4.0
     networks:
       - suricata
 
   kibana:
-    image: docker.elastic.co/kibana/kibana:6.3.0
+    image: docker.elastic.co/kibana/kibana:6.4.0
     environment:
       - ELASTICSEARCH_URL=http://elasticsearch:9200
     networks:
@@ -24,7 +24,7 @@ services:
       - 5601:5601
 
   logstash:
-    image: docker.elastic.co/logstash/logstash:6.3.0
+    image: docker.elastic.co/logstash/logstash:6.4.0
     entrypoint:
       - logstash
       - -f
