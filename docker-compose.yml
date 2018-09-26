@@ -28,6 +28,8 @@ services:
       - logstash
       - -f
       - /etc/logstash/conf.d/logstash.conf
+    ports:
+      - 5044:5044
     networks:
       - suricata
     volumes:
