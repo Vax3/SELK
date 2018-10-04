@@ -38,7 +38,7 @@ services:
   suricata:
     image: suricata
     environment:
-      - FILEBEAT_TAG=logstash
+      - FILEBEAT_TAG=suricata
       - HOME_NETWORK=172.16.3.0/24
       - LOGSTASH_HOST=logstash
       - LOGSTASH_PORT=5044
