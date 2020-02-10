@@ -1,63 +1,160 @@
 version: "3"
 services:
-  dvwa:
-    image: vax3/dvwa-selk
-    networks:
-      - secure
-    ports:
-      - 80:80
-    privileged: true
+#  dvwa:
+#    image: vax3/dvwa-selk
+#    networks:
+#      - secure
+#    ports:
+#      - 80:80
+#    privileged: true
+
+  elastalert-server:
+    image: bitsensor/elastalert:3.0.0-beta.1
+    depends_on:
+      - elasticsearch
+    hostname: elastalert-server
+#    networks:
+#      - suricata
+    volumes:
+      - ./elastalert/config/elastalert.yaml:/opt/elastalert/config.yaml
+      - ./elastalert/config/config.json:/opt/elastalert-server/config/config.json
+      - ./elastalert/rules/:/opt/elastalert/rules/
+      - ./elastalert/rule_templates/:/opt/elastalert/rule_templates/
+
+  es01:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.5.2
+    container_name: es01
+    hostname: es01
+    environment:
+      - bootstrap.memory_lock=true
+      - cluster.initial_master_nodes=es01,es02
+      - cluster.name=docker-cluster
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - http.cors.allow-origin=*
+      - http.cors.enabled=true
+      - network.host=_eth0_
+      - node.name=es01
+#      - xpack.security.enabled=true
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+#    volumes:
+#      - esdata01:/usr/share/elasticsearch/data
+#    networks:
+#      - suricata
+
+  es02:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.5.2
+    container_name: es02
+    hostname: es02
+    environment:
+      - bootstrap.memory_lock=true
+      - cluster.initial_master_nodes=es01,es02
+      - cluster.name=docker-cluster
+      - discovery.seed_hosts=es01
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - http.cors.allow-origin=*
+      - http.cors.enabled=true
+      - network.host=_eth0_
+      - node.name=es02
+#      - xpack.security.enabled=true
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+#    volumes:
+#      - esdata02:/usr/share/elasticsearch/data
+#    networks:
+#      - suricata
 
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:6.4.0
-    networks:
-      - suricata
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.5.2
+    container_name: elasticsearch
+    hostname: elasticsearch
+    depends_on:
+      - es01
+      - es02
+    environment:
+      - cluster.initial_master_nodes=es01,es02
+      - cluster.name=docker-cluster
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - http.cors.allow-origin=*
+      - http.cors.enabled=true
+      - network.host=_eth0_
+      - node.data=false
+      - node.ingest=false
+      - node.master=false
+      - node.name=elasticsearch
+      - discovery.seed_hosts=es01,es02
+#      - xpack.security.enabled=true
+#    networks:
+#      - suricata
+    ports:
+      - 9200:9200
 
   kibana:
-    image: docker.elastic.co/kibana/kibana:6.4.0
+    image: docker.elastic.co/kibana/kibana:7.5.2
+    hostname: kibana
+    depends_on:
+      - elasticsearch
     environment:
       - ELASTICSEARCH_URL=http://elasticsearch:9200
-    networks:
-      - suricata
+#    labels:
+#      - "traefik.backend=kibana"
+#      - "traefik.frontend.rule=Host:kibana.areva.local"
+#      - "traefik.port=5601"
+#    networks:
+#      - suricata
     ports:
       - 5601:5601
+    volumes:
+      - ./plugins/kibana/:/usr/share/kibana/plugins/
+      - ./kibana.yml:/usr/share/kibana/config/kibana.yml:ro
+#      - ./elastalert-kibana-plugin-1.1.0-7.5.0.zip:/elastalert-kibana-plugin-1.1.0-7.5.0.zip
 
   logstash:
-    image: docker.elastic.co/logstash/logstash:6.4.0
+    image: docker.elastic.co/logstash/logstash:7.5.2
+    hostname: logstash
+    depends_on:
+      - elasticsearch
     entrypoint:
       - logstash
       - -f
       - /etc/logstash/conf.d/logstash.conf
     ports:
       - 5044:5044
-    networks:
-      - suricata
+      - 5045:5045
+#    networks:
+#      - suricata
     volumes:
-      - ./Logstash-SELK/logstash.conf:/etc/logstash/conf.d/logstash.conf
+      - ./Logstash/logstash.conf:/etc/logstash/conf.d/logstash.conf
 
-  suricata:
-    image: suricata
-    environment:
-      - FILEBEAT_TAG=suricata
-      - HOME_NETWORK=172.16.3.0/24
-      - LOGSTASH_HOST=logstash
-      - LOGSTASH_PORT=5044
-      - PATH_LOGS=/var/log/suricata/eve.json
-    networks:
-      - secure
-      - suricata
-    privileged: true
+#  suricata:
+#    image: suricata
+#    environment:
+#      - ELASTICSEARCH_HOST=elasticsearch
+#      - ELASTICSEARCH_PORT=9200
+#      - FILEBEAT_TAG=suricata
+#      - HOME_NETWORK=172.16.3.0/24
+#      - LOGSTASH_HOST=logstash
+#      - LOGSTASH_PORT=5044
+#      - PATH_LOGS=/var/log/suricata/eve.json
+#    networks:
+#      - secure
+#      - suricata
+#    privileged: true
 
-networks:
-  secure:
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-      - subnet: 172.16.3.0/24
-  suricata:
-    driver: bridge
-    ipam:
-      driver: default
-      config:
-      - subnet: 172.16.2.0/24
+#networks:
+#  secure:
+#    driver: bridge
+#    ipam:
+#      driver: default
+#      config:
+#      - subnet: 172.16.3.0/24
+#  suricata:
+#    driver: bridge
+#    ipam:
+#      driver: default
+#      config:
+#      - subnet: 172.16.2.0/24
