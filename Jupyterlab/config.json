@@ -1,0 +1,8 @@
+{
+  "kernel_python_credentials" : {
+    "username": "",
+    "password": "",
+    "url": "http://spark:8998",
+    "auth": "None"
+  }
+}

@@ -1,0 +1,1 @@
+export { EuiHighlight } from './highlight';

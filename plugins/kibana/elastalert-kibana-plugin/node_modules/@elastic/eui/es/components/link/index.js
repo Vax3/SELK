@@ -1,0 +1,1 @@
+export { EuiLink } from './link';

@@ -1,0 +1,13 @@
+index: azure
+realert:
+    minutes: 0
+type: any
+filter:
+- query:
+    query_string: "toto"
+
+alert:
+- "command"
+
+command: ["ping", "8.8.8.8"]
+    

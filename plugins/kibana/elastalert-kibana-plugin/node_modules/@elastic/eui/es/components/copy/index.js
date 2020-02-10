@@ -1,0 +1,1 @@
+export { EuiCopy } from './copy';

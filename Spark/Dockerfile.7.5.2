@@ -1,0 +1,43 @@
+FROM alpine:latest
+
+RUN apk update \
+    && apk add --no-cache g++ py3-pip python3-dev
+
+# In one line pip fail to install because it install in wrong order
+RUN pip3 install cython
+RUN pip3 install numpy
+RUN pip3 install pandas
+
+
+FROM alpine:latest
+
+ENV ELASTICSEARCH_VERSION 7.5.2
+ENV HADOOP_VERSION 2.7
+ENV LIVY_VERSION 0.6.0-incubating
+ENV PYSPARK_PYTHON python3
+ENV SPARK_HOME /opt/spark
+ENV SPARK_VERSION 2.4.4
+
+RUN apk update \
+    && apk add --no-cache python3 libstdc++
+
+COPY --from=0 /usr/lib/python3.8/site-packages /usr/lib/python3.8/site-packages
+
+RUN mkdir /opt/spark \
+    && apk add bash openjdk11-jre-headless \
+    && wget -qO- https://www-eu.apache.org/dist/spark/spark-$SPARK_VERSION/spark-$SPARK_VERSION-bin-hadoop$HADOOP_VERSION.tgz | tar xz -C /opt/spark --strip-components=1
+
+RUN mkdir /opt/es_hadoop_jars \
+    &&  wget -q https://artifacts.elastic.co/downloads/elasticsearch-hadoop/elasticsearch-hadoop-$ELASTICSEARCH_VERSION.zip \
+    && unzip elasticsearch-hadoop-$ELASTICSEARCH_VERSION.zip -jd /opt/es_hadoop_jars \
+    && rm elasticsearch-hadoop-$ELASTICSEARCH_VERSION.zip \
+    && cp /opt/es_hadoop_jars/elasticsearch-spark-20_2.11-$ELASTICSEARCH_VERSION.jar /opt/spark/jars
+
+RUN wget -q https://www-us.apache.org/dist/incubator/livy/$LIVY_VERSION/apache-livy-$LIVY_VERSION-bin.zip \
+    && unzip apache-livy-$LIVY_VERSION-bin.zip \
+    && rm apache-livy-$LIVY_VERSION-bin.zip \
+    && mv apache-livy-$LIVY_VERSION-bin /opt/livy
+
+RUN mkdir /opt/livy/logs
+
+ENTRYPOINT ["/opt/livy/bin/livy-server"]

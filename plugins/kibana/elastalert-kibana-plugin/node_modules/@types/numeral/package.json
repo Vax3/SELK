@@ -1,0 +1,32 @@
+{
+    "name": "@types/numeral",
+    "version": "0.0.25",
+    "description": "TypeScript definitions for Numeral.js",
+    "license": "MIT",
+    "contributors": [
+        {
+            "name": "Vincent Bortone",
+            "url": "https://github.com/vbortone",
+            "githubUsername": "vbortone"
+        },
+        {
+            "name": "Behind The Math",
+            "url": "https://github.com/BehindTheMath",
+            "githubUsername": "BehindTheMath"
+        },
+        {
+            "name": "Kenneth Luján",
+            "url": "https://github.com/klujanrosas",
+            "githubUsername": "klujanrosas"
+        }
+    ],
+    "main": "",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/DefinitelyTyped/DefinitelyTyped.git"
+    },
+    "scripts": {},
+    "dependencies": {},
+    "typesPublisherContentHash": "df479a0b17a82ef2d6c9f355b75a32572f4e2ed63913b4295e126bda2df5e1b1",
+    "typeScriptVersion": "2.0"
+}

@@ -1,0 +1,1 @@
+export { EuiImage } from './image';
