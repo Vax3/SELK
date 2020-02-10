@@ -93,6 +93,21 @@ services:
     ports:
       - 9200:9200
 
+  jupyter:
+    build: ./Jupyterlab
+    image: jupyter
+#    labels:
+#      - "traefik.backend=jupyter"
+#      - "traefik.frontend.rule=Host:jupyter.areva.local"
+#      - "traefik.port=8888"
+    ports:
+      - 8888:8888
+#    networks:
+#      - suricata
+    volumes:
+      - ./Jupyterlab/notebooks:/opt/jupyter/notebooks
+      - ./Jupyterlab/config.json:/root/.sparkmagic/config.json:ro
+
   kibana:
     image: docker.elastic.co/kibana/kibana:7.5.2
     hostname: kibana
@@ -129,6 +144,15 @@ services:
 #      - suricata
     volumes:
       - ./Logstash/logstash.conf:/etc/logstash/conf.d/logstash.conf
+
+  spark:
+    build: ./Spark
+    image: spark
+    hostname: spark
+#    networks:
+#      - suricata
+    ports:
+      - 8998:8998
 
 #  suricata:
 #    image: suricata

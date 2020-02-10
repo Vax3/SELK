@@ -1,7 +1,13 @@
 # SELK
 SELK is an open source project for deploy on demand an architecture with the ELK stack and suricata IDS (with filebeat).
 
-Make sure that, when cloning the project, you use `git clone --recurse-submodules` or run `git submodule init` and `git submodule update` to clone the correct SELK version. You can modify the docker-compose file with the DVWA VM for testing the project.
+Jupyterlab is aivailable on <ip_jupyterlab>:8888, the token is available with the following command
+- docker-compose logs jupyter|grep -m 1 token|cut -d '=' -f 2
+
+Sometimes the elastalert-server is not ready, please reload the project or the container with this command
+- docker-compose up -d
+or
+- docker-compose up -d elastalert-server
 
 If you want to test the complet stack (with the DVWA container) please follow the instructions:
 - uncomment the DVWA service
