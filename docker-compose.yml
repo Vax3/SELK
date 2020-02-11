@@ -98,7 +98,7 @@ services:
     image: jupyter
 #    labels:
 #      - "traefik.backend=jupyter"
-#      - "traefik.frontend.rule=Host:jupyter.areva.local"
+#      - "traefik.frontend.rule=Host:jupyter.local"
 #      - "traefik.port=8888"
     ports:
       - 8888:8888
@@ -117,7 +117,7 @@ services:
       - ELASTICSEARCH_URL=http://elasticsearch:9200
 #    labels:
 #      - "traefik.backend=kibana"
-#      - "traefik.frontend.rule=Host:kibana.areva.local"
+#      - "traefik.frontend.rule=Host:kibana.local"
 #      - "traefik.port=5601"
 #    networks:
 #      - suricata
